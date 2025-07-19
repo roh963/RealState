@@ -1,8 +1,8 @@
-const Property = require('../models/Property');
-const cloudinary = require('../utils/cloudinary');
+import Property from '../models/Property.js';
+import { cloudinary } from '../utils/cloudinary.js';
 
 // Create a new property
-exports.createProperty = async (req, res) => {
+export const createProperty = async (req, res) => {
   try {
     const { title, description, price } = req.body;
     if (!title || !price || !req.file) {
@@ -29,7 +29,7 @@ exports.createProperty = async (req, res) => {
 };
 
 // Get properties created by the logged-in user
-exports.getMyProperties = async (req, res) => {
+export const getMyProperties = async (req, res) => {
   try {
     const properties = await Property.find({ createdBy: req.user._id });
     res.json(properties);
@@ -39,7 +39,7 @@ exports.getMyProperties = async (req, res) => {
 };
 
 // Update property (only price and description)
-exports.updateProperty = async (req, res) => {
+export const updateProperty = async (req, res) => {
   try {
     const { id } = req.params;
     const { price, description } = req.body;
@@ -58,7 +58,7 @@ exports.updateProperty = async (req, res) => {
 };
 
 // Delete property (owner or admin)
-exports.deleteProperty = async (req, res) => {
+export const deleteProperty = async (req, res) => {
   try {
     const { id } = req.params;
     const property = await Property.findById(id);
@@ -74,7 +74,7 @@ exports.deleteProperty = async (req, res) => {
 };
 
 // Admin: Get all properties sorted by title
-exports.getAllPropertiesAdmin = async (req, res) => {
+export const getAllPropertiesAdmin = async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Admin access only.' });
