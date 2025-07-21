@@ -4,8 +4,8 @@ import { cloudinary } from '../utils/cloudinary.js';
 // Create a new property
 export const createProperty = async (req, res) => {
   try {
-    const { title, description, price } = req.body;
-    if (!title || !price || !req.file) {
+    const { title, description, price , type } = req.body;
+    if (!title || !price || !req.file || !type) {
       return res.status(400).json({ message: 'Title, price, and image are required.' });
     }
     // Upload image to Cloudinary
@@ -18,6 +18,7 @@ export const createProperty = async (req, res) => {
       title,
       description,
       price,
+      type,
       image: result.secure_url,
       createdBy: req.user._id,
     });
@@ -53,7 +54,7 @@ export const updateProperty = async (req, res) => {
     await property.save();
     res.json(property);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message }); 
   }
 };
 
@@ -79,8 +80,11 @@ export const getAllPropertiesAdmin = async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Admin access only.' });
     }
-    const properties = await Property.find().sort({ title: 1 });
-    res.json(properties);
+    const properties = await Property.find()
+    .populate('createdBy', 'fullName email') 
+    .sort({ title: 1 });
+
+  res.json(properties);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
