@@ -5,7 +5,7 @@ import connectDB from './db/db.js';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes.js';
 import propertyRoutes from './routes/propertyRoutes.js';
-
+import contactRoutes from './routes/contactRoutes.js';
 // Load env variables
 dotenv.config();
 
@@ -25,6 +25,7 @@ app.use(cookieParser());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/property',propertyRoutes);
+app.use('/api/contact', contactRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
